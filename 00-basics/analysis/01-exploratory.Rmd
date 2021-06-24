@@ -1,0 +1,74 @@
+---
+title: "Basics - Exploratory"
+output: html_document
+editor_options:
+  chunk_output_type: console
+params:
+  verbose: yes
+---
+
+<!-- Children -->
+```{r, child=here::here("00-basics/analysis/00-import.Rmd")}
+```
+<!-- End Children-->
+
+```{r include=FALSE}
+if (params$verbose) {
+  knitr::opts_chunk$set(
+    echo = TRUE,
+    warning = TRUE,
+    message = TRUE
+  )
+} else {
+  knitr::opts_chunk$set(
+    echo = FALSE,
+    warning = FALSE,
+    message = FALSE
+  )
+}
+```
+
+```{r disp vs cyl}
+car_data %>%
+  ggplot(aes(x = cyl, y = disp)) +
+  geom_point()
+
+car_data %>%
+  ggplot(aes(x = cyl, y = hp)) +
+  geom_point()
+```
+
+```{r mpg vs hp}
+car_data %>%
+  ggplot(aes(x = hp, y = mpg)) +
+  geom_point()
+
+car_data %>%
+  ggplot(aes(x = hp, y = mpg)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+car_data %>%
+  ggplot(aes(x = hp, y = mpg)) +
+  geom_point(aes(color = disp), size = 5, alpha = 0.5)
+
+car_data %>%
+  ggplot(aes(x = hp, y = mpg)) +
+  geom_point(aes(size = qsec, color = disp), alpha = 0.5) +
+  facet_wrap(gear ~ cyl, ncol = 8)
+
+car_data %>%
+  ggplot(aes(x = hp, y = mpg)) +
+  geom_point(aes(size = qsec, color = disp), alpha = 0.5) +
+  facet_grid(gear ~ cyl)
+
+car_data_4cyl <- subset(mtcars, cyl == 4)
+
+car_data_4cyl %>%
+  ggplot(aes(x = hp, y = mpg, label = row.names(car_data_4cyl))) +
+  geom_point(aes(shape = factor(am)), size = 5)
+
+car_data_4cyl %>%
+  ggplot(aes(x = hp, y = mpg, label = row.names(car_data_4cyl))) +
+  geom_label(aes(fill = factor(am)))
+```

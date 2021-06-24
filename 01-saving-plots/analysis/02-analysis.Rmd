@@ -1,0 +1,84 @@
+---
+title: "Plots and Functions - Analysis"
+author: "irw"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+editor_options:
+  chunk_output_type: console
+params:
+  verbose: no
+---
+
+<!-- Children -->
+```{r, child=here::here("01-saving-plots/analysis/00-import.Rmd")}
+```
+<!-- End Children-->
+
+```{r include=FALSE}
+if (params$verbose) {
+  knitr::opts_chunk$set(
+    echo = TRUE,
+    warning = TRUE,
+    message = TRUE
+  )
+} else {
+  knitr::opts_chunk$set(
+    echo = FALSE,
+    warning = FALSE,
+    message = FALSE
+  )
+}
+```
+
+```{r}
+library(ggbeeswarm)
+library(ggpubr)
+source(here::here("Resources/geom_prismbars.R"))
+source(here::here("Resources/constants-saving-plots.R"))
+```
+
+# Statistics
+```{r}
+superplots_means <- superplots_data %>%
+  group_by(Treatment, Replicate) %>%
+  summarise_all(mean)
+
+t.test(subset(superplots_means, Treatment == "Control")$Speed,
+  subset(superplots_means, Treatment == "Drug")$Speed,
+  paired = TRUE
+)
+```
+
+# Plots
+```{r}
+plot_speed_treatment_beeswarm <- ggplot(superplots_data, aes(x = Treatment, y = Speed, color = factor(Replicate), fill = factor(Replicate))) +
+  geom_beeswarm(cex = 2, alpha = 0.5) +
+  geom_prismbars(inherit.aes = FALSE, aes(x = Treatment, y = Speed), size = 1) +
+  geom_beeswarm(data = superplots_means, size = 3, shape = "triangle filled", color = "black", stroke = 1) +
+  scale_colour_brewer(palette = "Set1") +
+  scale_fill_discrete(name = "Replicates", labels = c("1", "2", "3")) +
+  scale_color_discrete(name = "Replicates", labels = c("1", "2", "3")) +
+  theme_beeswarm
+
+plot_speed_treatment_beeswarm_stats <- plot_speed_treatment_beeswarm +
+  stat_compare_means(data = superplots_means, 
+                     comparisons = list(c("Control", "Drug")), 
+                     method = "t.test", paired = TRUE)
+```
+
+```{r}
+# plot_speed_treatment_beeswarm_stats
+```
+
+
+```{r fig.width=3, fig.height=3, dpi = 300, fig.retina=1}
+# plot_speed_treatment_beeswarm
+# plot_speed_treatment_beeswarm_stats
+```
+
+
+```{r fig.width=3, fig.height=4.1, dpi = 300, fig.retina=1}
+plot_speed_treatment_beeswarm_stats
+```

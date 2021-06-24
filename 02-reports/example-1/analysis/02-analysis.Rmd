@@ -1,0 +1,96 @@
+---
+title: "Reports - Analysis"
+author: "irw"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+    toc_float: yes
+editor_options:
+  chunk_output_type: console
+params:
+  verbose: no
+---
+
+<!-- Children -->
+```{r, child=here::here("02-reports/example-1/analysis/00-import.Rmd")}
+```
+<!-- End Children-->
+
+```{r include=FALSE}
+if (params$verbose) {
+  knitr::opts_chunk$set(
+    echo = TRUE,
+    warning = TRUE,
+    message = TRUE
+  )
+} else {
+  knitr::opts_chunk$set(
+    echo = FALSE,
+    warning = FALSE,
+    message = FALSE
+  )
+}
+```
+
+```{r}
+# Libraries
+library(emmeans)
+```
+
+```{r Sepal Length}
+plot_sepal_length <- iris_data %>% 
+  ggplot(aes(x = Species, y = Sepal.Length)) +
+  geom_violin() +
+  theme_bw()
+
+model_sepal_length <- lm(iris_data, formula = Sepal.Length ~ Species)
+
+anova_sepal_length <- model_sepal_length %>% anova()
+
+emmeans_sepal_length <- emmeans(model_sepal_length, "Species")
+```
+
+
+```{r Sepal Width}
+plot_sepal_width <- iris_data %>% 
+  ggplot(aes(x = Species, y = Sepal.Width)) +
+  geom_violin() +
+  theme_bw()
+
+model_sepal_width <- lm(iris_data, formula = Sepal.Width ~ Species)
+
+anova_sepal_width <- model_sepal_width %>% anova()
+
+emmeans_sepal_width <- emmeans(model_sepal_length, "Species")
+```
+
+
+```{r Petal Length}
+plot_petal_length <- iris_data %>% 
+  ggplot(aes(x = Species, y = Petal.Length)) +
+  geom_violin() +
+  theme_bw()
+
+model_petal_length <- lm(iris_data, formula = Petal.Length ~ Species)
+
+anova_petal_length <- model_petal_length %>% anova()
+
+emmeans_petal_length <- emmeans(model_petal_length, "Species")
+```
+
+
+```{r Petal Width}
+plot_petal_width <- iris_data %>% 
+  ggplot(aes(x = Species, y = Petal.Width)) +
+  geom_violin() +
+  theme_bw()
+
+model_petal_width <- lm(iris_data, formula = Petal.Width ~ Species)
+
+anova_petal_width <- model_petal_width %>% anova()
+
+emmeans_petal_width <- emmeans(model_petal_width, "Species")
+```
+

@@ -1,0 +1,138 @@
+---
+title: "Plots and Functions - Exploratory"
+author: "irw"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+editor_options:
+  chunk_output_type: console
+params:
+  verbose: no
+---
+
+<!-- Children -->
+```{r, child=here::here("01-saving-plots/analysis/00-import.Rmd")}
+```
+<!-- End Children-->
+
+```{r include=FALSE}
+if (params$verbose) {
+  knitr::opts_chunk$set(
+    echo = TRUE,
+    warning = TRUE,
+    message = TRUE
+  )
+} else {
+  knitr::opts_chunk$set(
+    echo = FALSE,
+    warning = FALSE,
+    message = FALSE
+  )
+}
+```
+
+```{r}
+library(ggbeeswarm)
+library(car)
+```
+
+
+# Histogram
+
+```{r}
+superplots_data %>%
+  ggplot(aes(Speed, fill = Treatment)) +
+  geom_histogram(alpha = 0.5)
+
+superplots_data %>%
+  ggplot() +
+  geom_histogram(aes(Speed, fill = Treatment), alpha = 0.5) +
+  facet_wrap(~Treatment, ncol = 1)
+
+superplots_data %>%
+  ggplot() +
+  geom_histogram(aes(Speed, fill = factor(Replicate)), alpha = 0.5) +
+  facet_wrap(~Treatment, ncol = 1)
+```
+
+# Density
+
+```{r}
+superplots_data %>%
+  ggplot() +
+  geom_density(aes(Speed, fill = Treatment), alpha = 0.5)
+
+superplots_data %>%
+  ggplot() +
+  geom_density(aes(Speed, fill = Treatment), alpha = 0.5) +
+  facet_wrap(~Treatment, ncol = 1)
+
+superplots_data %>%
+  ggplot() +
+  geom_density(aes(Speed, fill = factor(Replicate)), alpha = 0.5) +
+  facet_wrap(~Treatment, ncol = 1)
+```
+
+# Scatter/Swarm
+
+```{r}
+superplots_data %>%
+  ggplot(aes(x = Treatment, y = Speed)) +
+  geom_point()
+
+superplots_data %>%
+  ggplot(aes(x = Treatment, y = Speed)) +
+  geom_beeswarm(cex = 1.5, alpha = 0.7)
+
+superplots_data %>%
+  ggplot(aes(x = Treatment, y = Speed, color = factor(Replicate))) +
+  geom_beeswarm(cex = 1.5, alpha = 0.7)
+
+superplots_data %>%
+  ggplot(aes(x = Treatment, y = Speed, color = factor(Replicate))) +
+  geom_beeswarm(cex = 1.5, alpha = 0.7) +
+  facet_wrap(~Replicate)
+```
+
+# Statistics
+
+```{r echo = TRUE}
+t.test(
+  subset(superplots_data, Treatment == "Control")$Speed,
+  subset(superplots_data, Treatment == "Drug")$Speed
+)
+
+superplots_means <- superplots_data %>%
+  group_by(Treatment, Replicate) %>%
+  summarise_all(mean)
+
+t.test(subset(superplots_means, Treatment == "Control")$Speed,
+  subset(superplots_means, Treatment == "Drug")$Speed,
+  paired = TRUE
+)
+```
+
+How does that compare to a two-way ANOVA/linear model?
+```{r echo = TRUE}
+options(contrasts = c("contr.sum", "contr.poly"))
+
+model_twi <- lm(
+  data = superplots_data,
+  formula = Speed ~ Treatment * factor(Replicate)
+) # shorthand for Treament + Replicate + Treatment:Replicate
+
+car::Anova(model_twi, type = "III")
+```
+
+Nested ANOVA may be more appropriate here, but I need to look into it more. Stick with the original example for now.
+```{r echo = TRUE}
+model_nested <- lm(
+  data = superplots_data,
+  formula = Speed ~ Treatment / factor(Replicate)
+)
+
+model_nested %>% summary()
+
+car::Anova(model_nested, type = "III")
+```

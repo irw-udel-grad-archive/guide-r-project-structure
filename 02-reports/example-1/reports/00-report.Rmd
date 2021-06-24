@@ -1,0 +1,126 @@
+---
+title: "Reports - Iris Data Report"
+author: "irw"
+output:
+  pdf_document:
+    toc: true
+  html_document:
+    toc: true
+    toc_float: true
+editor_options:
+  chunk_output_type: console
+params:
+  verbose: no
+---
+
+# Summary
+
+Iris species are quite important for life as we know it. They facilitate exemplary statistical analysis and are nice to look at. However, iris flowers bloom in various shapes and sizes, as evidenced by the differences between three species shown in **Figure 1**. Previous work suggests that longer petals are associated with negative digestive outcomes when eaten by your dog.[^1] Thus, we herein characterize the iris species *Iris setosa*, *Iris versicolor*, and *Iris virginica* in terms of their dimensional differences and demonstrate statistical comparisons as provided by analysis of variance (ANOVA). With this information, dogs everywhere will be happier and healthier... Wait! No! Don't eat that!
+
+[^1]: This is a baseless claim.
+
+```{r, echo=FALSE, eval = TRUE, out.height="1.5 in", fig.cap="Iris species. From left to right: *Iris setosa*, *Iris versicolor*, and *Iris virginica*. Source: Wikipedia. As you can see, this caption does not show italics. See the output formats from the `bookdown` package for an alternative.", fig.show='hold', fig.align='center'}
+iris_images <- c(here::here("02-reports/data/images/photo-iris-setosa.jpg"),
+                 here::here("02-reports/data/images/photo-iris-versicolor.jpg"),
+                 here::here("02-reports/data/images/photo-iris-virginica.jpg"))
+
+knitr::include_graphics(iris_images)
+```
+
+
+```{r, echo=FALSE}
+if (params$verbose) {
+  knitr::opts_chunk$set(include = TRUE)
+  knitr::asis_output("# Imports and Processing")
+} else {
+  knitr::opts_chunk$set(include = FALSE)
+}
+```
+
+<!-- Non-text Children -->
+```{r, child=here::here("02-reports/example-1/analysis/02-analysis.Rmd")}
+```
+<!-- End Children-->
+
+```{r, include=FALSE}
+if (params$verbose) {
+  knitr::opts_chunk$set(
+    echo = TRUE,
+    warning = TRUE,
+    message = TRUE
+  )
+} else {
+  knitr::opts_chunk$set(
+    echo = FALSE,
+    warning = FALSE,
+    message = FALSE
+  )
+}
+
+# Everything in the report document should be included
+knitr::opts_chunk$set(include = TRUE)
+```
+
+# Analysis
+```{r}
+# Load libraries
+library(kableExtra)
+```
+
+## Sepal Length
+```{r child = here::here("02-reports/example-1/reports/body/body-sepal-length.md")}
+```
+
+```{r}
+plot_sepal_length
+anova_sepal_length
+pairs(emmeans_sepal_length)
+knitr::asis_output("\n\\newpage")
+```
+
+## Sepal Width
+```{r child = here::here("02-reports/example-1/reports/body/body-sepal-width.md")}
+```
+
+```{r}
+plot_sepal_width
+anova_sepal_width
+pairs(emmeans_sepal_width)
+knitr::asis_output("\n\\newpage")
+```
+
+## Petal Length
+```{r child = here::here("02-reports/example-1/reports/body/body-petal-length.md")}
+```
+
+```{r}
+plot_petal_length
+anova_petal_length
+pairs(emmeans_petal_length)
+knitr::asis_output("\n\\newpage")
+```
+
+## Petal Width
+```{r child = here::here("02-reports/example-1/reports/body/body-petal-width.md")}
+```
+
+```{r}
+plot_petal_width
+anova_petal_width
+pairs(emmeans_petal_width)
+knitr::asis_output("\n\\newpage")
+```
+
+# Appendix
+## Data table
+
+The values in this table can be copied and pasted. From the HTML version, copy and paste into a text file, then save as a TSV.
+
+```{r Table}
+iris_data %>% 
+  select("Species", everything()) %>% 
+  kbl(booktabs = T, longtable = T, caption = "Iris data set") %>% 
+  kable_styling(latex_options = c("repeat_header")) %>% 
+  scroll_box(width = "100%", height = "200px")
+```
+

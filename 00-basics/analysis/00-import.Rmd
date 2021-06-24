@@ -1,0 +1,39 @@
+---
+title: "Basics - Import"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+params:
+  verbose: yes
+---
+
+```{r, include=FALSE}
+if (params$verbose) {
+  knitr::opts_chunk$set(
+    echo = TRUE,
+    warning = TRUE,
+    message = TRUE
+  )
+} else {
+  knitr::opts_chunk$set(
+    echo = FALSE,
+    warning = FALSE,
+    message = FALSE
+  )
+}
+```
+
+```{r}
+# Load libraries
+library(tidyverse)
+library(here)
+```
+
+```{r}
+# Setup - save data for example
+# write_csv(mtcars, here::here("00-mtcars/data/mtcars-data-19810601.csv"))
+```
+
+```{r Import mtcars}
+car_data <- read_csv(here::here("00-basics/data/mtcars-data-19810601.csv"))
+```

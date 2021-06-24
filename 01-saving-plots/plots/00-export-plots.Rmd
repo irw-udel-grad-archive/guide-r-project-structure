@@ -1,0 +1,83 @@
+---
+title: "Plots and Functions - Export Plots"
+author: "irw"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+editor_options:
+  chunk_output_type: console
+params:
+  verbose: yes
+---
+
+<!-- Children -->
+```{r, child=here::here("01-saving-plots/analysis/02-analysis.Rmd")}
+```
+<!-- End Children-->
+
+```{r include=FALSE}
+if (params$verbose) {
+  knitr::opts_chunk$set(
+    echo = TRUE,
+    warning = TRUE,
+    message = TRUE
+  )
+} else {
+  knitr::opts_chunk$set(
+    echo = FALSE,
+    warning = FALSE,
+    message = FALSE
+  )
+}
+```
+
+```{r}
+source(here::here("Resources/wiley-dimensions.R"))
+```
+
+
+```{r}
+# JPG
+ggsave(filename = here::here("01-saving-plots/plots/fig1-beeswarm-20200630.jpg"),
+       plot = plot_speed_treatment_beeswarm,
+       units = "mm",
+       width = wiley_small_w_mm,
+       height = wiley_small_w_mm,
+       dpi = 1000)
+
+# PNG
+ggsave(filename = here::here("01-saving-plots/plots/fig1-beeswarm-20200630.png"),
+       plot = plot_speed_treatment_beeswarm,
+       units = "mm",
+       width = wiley_small_w_mm,
+       height = wiley_small_w_mm,
+       dpi = 1000)
+
+# TIFF
+ggsave(filename = here::here("01-saving-plots/plots/fig1-beeswarm-20200630.tiff"),
+       plot = plot_speed_treatment_beeswarm,
+       units = "mm",
+       width = wiley_small_w_mm,
+       height = wiley_small_w_mm,
+       dpi = 1000)
+
+# PDF
+# dpi is not necessary
+ggsave(filename = here::here("01-saving-plots/plots/fig1-beeswarm-20200630.pdf"),
+       plot = plot_speed_treatment_beeswarm,
+       units = "mm",
+       width = wiley_small_w_mm,
+       height = wiley_small_w_mm,
+       dpi = 1000)
+
+# EPS
+# dpi is not necessary; does not support transparency
+ggsave(filename = here::here("01-saving-plots/plots/fig1-beeswarm-20200630.eps"),
+       plot = plot_speed_treatment_beeswarm,
+       units = "mm",
+       width = wiley_small_w_mm,
+       height = wiley_small_w_mm,
+       dpi = 1000)
+```
+
