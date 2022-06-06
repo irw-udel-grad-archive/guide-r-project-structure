@@ -27,6 +27,7 @@ Otherwise, include it within a chunk that can be run selectively
 - Use `tidyverse` [packages](https://www.tidyverse.org/) and [style](https://style.tidyverse.org/index.html)
 - Use the `styler` [add-in](https://cran.r-project.org/web/packages/styler/index.html) to keep your code clean and readable
 - Use the `tinytex` [package](https://yihui.org/tinytex/) for TeX/PDF support
+  - Use `formatR` and the chunk options `tidy = TRUE`, `tidy.opts(list(width.cutoff=60))` to keep code within the bounds of the PDF output
 
 ## Naming
 - Name each manuscript project by the name of the thematic parent and a codename  
