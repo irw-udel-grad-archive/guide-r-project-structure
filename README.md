@@ -1,3 +1,7 @@
+This was forked from a repository I made while setting up the lab GitHub.
+
+---
+
 # Philosophy
 
 Research is hard enough. A project that is organized, simple, and modular is a project that is easier to debug, easier to revisit, easier to reproduce, and easier to share in whole or in part. At first, it may be *harder* to work this way. It will certainly be slower. It will likely be thankless but ultimately worth it. 
